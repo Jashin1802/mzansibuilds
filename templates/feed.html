@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block title %}Live Feed — MzansiBuilds{% endblock %}
+
+{% block content %}
+<div class="two-col">
+
+  <!-- Feed -->
+  <div>
+    <div class="feed-header">
+      <h1 class="feed-title">Live Feed</h1>
+      <span class="live-label"><span class="pulse-dot"></span>{{ stats.active }} building now</span>
+    </div>
+
+    {% if not projects %}
+      <div class="empty">
+        <div class="empty-icon">🌱</div>
+        <p class="empty-text">No active projects yet. Be the first to start building!</p>
+        <a href="{{ url_for('projects.new_project') }}" class="btn btn-primary" style="margin-top:14px;">+ Start Building</a>
+      </div>
+    {% else %}
+      <div class="feed-section">
+        {% for project in projects %}
+          <div class="project-card">
+            <div class="project-meta">
+              <span class="tag-stage stage-{{ project.stage | replace(' ', '') }}">{{ project.stage }}</span>
+              <span class="time-ago">{{ project.updated_at.strftime('%d %b %Y') }}</span>
+            </div>
+            <a href="{{ url_for('projects.view_project', project_id=project.id) }}" class="project-title-link">
+              <h2 class="project-title">{{ project.title }}</h2>
+            </a>
+            <p class="project-desc">{{ project.description }}</p>
+
+            {% if project.tags_list or project.support_list %}
+              <div class="project-tags">
+                {% for tag in project.tags_list[:4] %}
+                  <span class="tag">{{ tag }}</span>
+                {% endfor %}
+                {% for s in project.support_list[:2] %}
+                  <span class="tag tag-green">🤝 {{ s }}</span>
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            <div class="project-footer">
+              <div class="dev-info-row">
+                <a href="{{ url_for('profile.view_profile', username=project.author.username) }}" class="dev-link">
+                  <div class="avatar avatar-sm">{{ project.author.avatar_initials }}</div>
+                  <div>
+                    <div class="dev-name">{{ project.author.name }}</div>
+                    <div class="dev-username">@{{ project.author.username }}</div>
+                  </div>
+                </a>
+              </div>
+              <div class="action-row">
+                <!-- Collab hand -->
+                <form method="POST" action="{{ url_for('projects.toggle_collab', project_id=project.id) }}" style="display:inline;">
+                  <button type="submit" class="icon-btn {% if project.has_raised_hand(current_user.id) %}raised{% endif %}"
+                    title="{{ 'Lower hand' if project.has_raised_hand(current_user.id) else 'Raise hand to collaborate' }}">
+                    {{ '✋' if project.has_raised_hand(current_user.id) else '🙋' }}
+                    <span class="count">{{ project.collaborators | length }}</span>
+                  </button>
+                </form>
+                <a href="{{ url_for('projects.view_project', project_id=project.id) }}#comments" class="icon-btn">
+                  💬 <span class="count">{{ project.comments | length }}</span>
+                </a>
+                {% if project.milestones %}
+                  <a href="{{ url_for('projects.view_project', project_id=project.id) }}#milestones" class="icon-btn">
+                    🏁 <span class="count">{{ project.milestones | length }}</span>
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-card">
+      <div class="sidebar-header">Community Devs 👩‍💻</div>
+      <div class="sidebar-body">
+        {% for dev in devs[:7] %}
+          <a href="{{ url_for('profile.view_profile', username=dev.username) }}" class="dev-row-link">
+            <div class="dev-row">
+              <div class="avatar avatar-sm">{{ dev.avatar_initials }}</div>
+              <div class="dev-info">
+                <div class="dev-name">{{ dev.name }}</div>
+                <div class="dev-username">@{{ dev.username }}</div>
+              </div>
+              <span class="proj-count">{{ dev.project_count }}p</span>
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="sidebar-header">Platform Stats</div>
+      <div class="sidebar-body">
+        {% for label, value in [('Builders', stats.builders), ('Active Projects', stats.active), ('Shipped', stats.shipped), ('Total Milestones', stats.milestones)] %}
+          <div class="stat-row">
+            <span class="stat-label">{{ label }}</span>
+            <span class="stat-value">{{ value }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="sidebar-cta">
+      <div class="cta-title">Ready to build in public?</div>
+      <p class="cta-text">Share your project and connect with fellow SA developers.</p>
+      <a href="{{ url_for('projects.new_project') }}" class="btn btn-primary w-full">+ Start Building</a>
+    </div>
+  </aside>
+
+</div>
+{% endblock %}

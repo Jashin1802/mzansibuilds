@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Sign In — MzansiBuilds{% endblock %}
+{% block main_class %}auth-screen{% endblock %}
+
+{% block content %}
+<div class="auth-card">
+  <div class="auth-logo">
+    <div class="auth-logo-text"><span class="logo-mzansi">Mzansi</span>Builds</div>
+    <p class="auth-tagline">Build in public. Grow together. 🌍</p>
+  </div>
+
+  <div class="auth-tabs">
+    <a href="{{ url_for('auth.login') }}" class="auth-tab active">Sign In</a>
+    <a href="{{ url_for('auth.register') }}" class="auth-tab">Create Account</a>
+  </div>
+
+  {% if error %}
+    <div class="auth-error">{{ error }}</div>
+  {% endif %}
+
+  <form method="POST" class="auth-form">
+    <div class="form-group">
+      <label class="label" for="username">Username</label>
+      <input class="input" type="text" id="username" name="username" placeholder="sipho_dev" required autofocus />
+    </div>
+    <div class="form-group">
+      <label class="label" for="password">Password</label>
+      <input class="input" type="password" id="password" name="password" placeholder="••••••" required />
+    </div>
+    <p class="demo-hint">Demo accounts (password: <code>password</code>):<br>
+      <code>sipho_dev</code> · <code>amahle_codes</code> · <code>kagiso_builds</code>
+    </p>
+    <button type="submit" class="btn btn-primary w-full">Sign In →</button>
+  </form>
+</div>
+{% endblock %}

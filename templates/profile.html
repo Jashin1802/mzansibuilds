@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}{{ user.name }} — MzansiBuilds{% endblock %}
+
+{% block content %}
+<div class="profile-page">
+
+  <!-- Profile card -->
+  <div class="card profile-card">
+    <div class="profile-banner"></div>
+    <div class="profile-body">
+      <div class="profile-avatar-wrap">
+        <div class="avatar xl">{{ user.avatar_initials }}</div>
+      </div>
+      <div class="profile-info-row">
+        <div>
+          <h1 class="profile-name">{{ user.name }}</h1>
+          <div class="profile-username">@{{ user.username }}</div>
+        </div>
+        {% if user.id == current_user.id %}
+          <a href="{{ url_for('profile.edit_profile') }}" class="btn btn-outline btn-sm">Edit Profile</a>
+        {% endif %}
+      </div>
+      <p class="profile-bio">{{ user.bio }}</p>
+      <div class="profile-stats">
+        {% for label, value in [('Projects', user.project_count), ('Shipped', user.shipped_count), ('Milestones', user.milestone_count), ('Collabs', user.collab_count)] %}
+          <div class="profile-stat">
+            <div class="profile-stat-value">{{ value }}</div>
+            <div class="profile-stat-label">{{ label }}</div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Active projects -->
+  {% set active = projects | rejectattr('is_completed') | list %}
+  {% if active %}
+    <div class="section-head" style="margin-top:1.5rem;"><h2 class="section-title">Active Projects</h2><div class="section-line"></div></div>
+    <div class="feed-section">
+      {% for project in active %}
+        <div class="project-card">
+          <div class="project-meta">
+            <span class="tag-stage stage-{{ project.stage | replace(' ', '') }}">{{ project.stage }}</span>
+          </div>
+          <a href="{{ url_for('projects.view_project', project_id=project.id) }}" class="project-title-link">
+            <h2 class="project-title">{{ project.title }}</h2>
+          </a>
+          <p class="project-desc">{{ project.description }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <!-- Shipped -->
+  {% set shipped = projects | selectattr('is_completed') | list %}
+  {% if shipped %}
+    <div class="section-head" style="margin-top:1.5rem;"><h2 class="section-title">Shipped Projects 🎉</h2><div class="section-line"></div></div>
+    <div class="wall-grid" style="margin-top:.75rem;">
+      {% for project in shipped %}
+        <a href="{{ url_for('projects.view_project', project_id=project.id) }}" class="wall-card">
+          <div class="wall-confetti">🎉</div>
+          <div class="wall-card-name" style="margin-top:8px;">{{ project.title }}</div>
+          <div class="wall-card-tags" style="margin-top:6px;">
+            {% for tag in project.tags_list[:2] %}
+              <span class="wall-tag">{{ tag }}</span>
+            {% endfor %}
+          </div>
+          <div class="wall-card-meta">{{ project.milestones | length }} milestones</div>
+        </a>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% if not projects %}
+    <div class="empty" style="margin-top:1.5rem;">
+      <div class="empty-icon">🌱</div>
+      <p class="empty-text">No projects yet{% if user.id == current_user.id %} — start building!{% endif %}</p>
+      {% if user.id == current_user.id %}
+        <a href="{{ url_for('projects.new_project') }}" class="btn btn-primary" style="margin-top:14px;">Start your first project</a>
+      {% endif %}
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}

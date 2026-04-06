@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Edit {{ project.title }} — MzansiBuilds{% endblock %}
+
+{% block content %}
+<div class="form-page">
+  <div class="form-page-header">
+    <h1 class="form-page-title">Edit Project</h1>
+    <p class="form-page-sub">Update the details for "{{ project.title }}"</p>
+  </div>
+
+  {% if error %}
+    <div class="auth-error" style="margin-bottom:16px;">{{ error }}</div>
+  {% endif %}
+
+  <form method="POST" class="project-form">
+    <div class="form-group">
+      <label class="label" for="title">Project Title *</label>
+      <input class="input" type="text" id="title" name="title" value="{{ project.title }}" required autofocus />
+    </div>
+
+    <div class="form-group">
+      <label class="label" for="description">Description *</label>
+      <textarea class="input textarea" id="description" name="description" required>{{ project.description }}</textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="label" for="stage">Current Stage</label>
+      <select class="input select" id="stage" name="stage">
+        {% for s in stages %}
+          <option value="{{ s }}" {% if s == project.stage %}selected{% endif %}>{{ s }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="label">Support Needed</label>
+      <div class="tag-grid">
+        {% for s in support_types %}
+          <label class="tag-option-label">
+            <input type="checkbox" name="support" value="{{ s }}" {% if s in project.support_list %}checked{% endif %} hidden />
+            <span class="tag-option {% if s in project.support_list %}selected{% endif %}">{{ s }}</span>
+          </label>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="label">Tech Stack</label>
+      <div class="tag-grid">
+        {% for t in tech_tags %}
+          <label class="tag-option-label">
+            <input type="checkbox" name="tags" value="{{ t }}" {% if t in project.tags_list %}checked{% endif %} hidden />
+            <span class="tag-option {% if t in project.tags_list %}selected{% endif %}">{{ t }}</span>
+          </label>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <a href="{{ url_for('projects.view_project', project_id=project.id) }}" class="btn btn-ghost">Cancel</a>
+      <button type="submit" class="btn btn-primary">Save Changes →</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

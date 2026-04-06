@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}MzansiBuilds{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+{% if current_user.is_authenticated %}
+<nav class="topnav">
+  <a href="{{ url_for('feed.feed') }}" class="logo">
+    <span class="logo-dot"></span>
+    <span><span class="logo-mzansi">Mzansi</span>Builds</span>
+  </a>
+  <div class="nav-links">
+    <a href="{{ url_for('feed.feed') }}" class="nav-btn {% if request.endpoint == 'feed.feed' %}active{% endif %}">Live Feed</a>
+    <a href="{{ url_for('projects.my_projects') }}" class="nav-btn {% if request.endpoint == 'projects.my_projects' %}active{% endif %}">My Projects</a>
+    <a href="{{ url_for('wall.wall') }}" class="nav-btn {% if request.endpoint == 'wall.wall' %}active{% endif %}">🎉 Wall</a>
+    <a href="{{ url_for('profile.profile') }}" class="nav-btn {% if 'profile' in request.endpoint %}active{% endif %}">Profile</a>
+  </div>
+  <div class="nav-user">
+    <a href="{{ url_for('projects.new_project') }}" class="btn btn-primary btn-sm">+ New Project</a>
+    <a href="{{ url_for('profile.profile') }}" class="avatar" title="{{ current_user.name }}">{{ current_user.avatar_initials }}</a>
+  </div>
+</nav>
+{% endif %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-container">
+      {% for category, message in messages %}
+        <div class="flash flash-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<main class="{% block main_class %}main{% endblock %}">
+  {% block content %}{% endblock %}
+</main>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% block extra_scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Create Account — MzansiBuilds{% endblock %}
+{% block main_class %}auth-screen{% endblock %}
+
+{% block content %}
+<div class="auth-card">
+  <div class="auth-logo">
+    <div class="auth-logo-text"><span class="logo-mzansi">Mzansi</span>Builds</div>
+    <p class="auth-tagline">Join the community of SA builders 🚀</p>
+  </div>
+
+  <div class="auth-tabs">
+    <a href="{{ url_for('auth.login') }}" class="auth-tab">Sign In</a>
+    <a href="{{ url_for('auth.register') }}" class="auth-tab active">Create Account</a>
+  </div>
+
+  {% if error %}
+    <div class="auth-error">{{ error }}</div>
+  {% endif %}
+
+  <form method="POST" class="auth-form">
+    <div class="form-group">
+      <label class="label" for="name">Full Name</label>
+      <input class="input" type="text" id="name" name="name" placeholder="Lerato Mokoena" required autofocus />
+    </div>
+    <div class="form-group">
+      <label class="label" for="username">Username</label>
+      <input class="input" type="text" id="username" name="username" placeholder="lerato_dev" required />
+    </div>
+    <div class="form-group">
+      <label class="label" for="bio">Bio <span class="text-muted">(optional)</span></label>
+      <input class="input" type="text" id="bio" name="bio" placeholder="Full-stack dev from Cape Town 🌍" />
+    </div>
+    <div class="form-group">
+      <label class="label" for="password">Password</label>
+      <input class="input" type="password" id="password" name="password" placeholder="Min. 6 characters" required />
+    </div>
+    <div class="form-group">
+      <label class="label" for="confirm_password">Confirm Password</label>
+      <input class="input" type="password" id="confirm_password" name="confirm_password" placeholder="Repeat password" required />
+    </div>
+    <button type="submit" class="btn btn-primary w-full">Create Account →</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Celebration Wall — MzansiBuilds{% endblock %}
+
+{% block content %}
+<div class="wall-page">
+  <div class="wall-hero">
+    <div class="wall-hero-icon">🎉</div>
+    <h1 class="wall-hero-title">Celebration Wall</h1>
+    <p class="wall-hero-sub">Developers who shipped their projects publicly</p>
+  </div>
+
+  {% if not completed_projects %}
+    <div class="empty">
+      <div class="empty-icon">🏗️</div>
+      <p class="empty-text">No completed projects yet — be the first to ship!</p>
+      <a href="{{ url_for('projects.new_project') }}" class="btn btn-primary" style="margin-top:14px;">Start Building</a>
+    </div>
+  {% else %}
+    <div class="wall-grid">
+      {% for project in completed_projects %}
+        <a href="{{ url_for('projects.view_project', project_id=project.id) }}" class="wall-card">
+          <div class="wall-confetti">🎉</div>
+          <div class="avatar lg">{{ project.author.avatar_initials }}</div>
+          <div class="wall-card-name">{{ project.author.name }}</div>
+          <div class="wall-card-project">{{ project.title }}</div>
+          <div class="wall-card-tags">
+            {% for tag in project.tags_list[:2] %}
+              <span class="wall-tag">{{ tag }}</span>
+            {% endfor %}
+          </div>
+          <div class="wall-card-meta">Shipped · {{ project.milestones | length }} milestones</div>
+        </a>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% if active_count > 0 %}
+    <div class="wall-footer-banner">
+      <p><strong>{{ active_count }}</strong> project{{ 's' if active_count != 1 else '' }} still in progress — keep building! 💪</p>
+      <a href="{{ url_for('feed.feed') }}" class="btn btn-outline btn-sm">View Live Feed →</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

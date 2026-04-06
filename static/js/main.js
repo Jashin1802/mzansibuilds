@@ -1,0 +1,24 @@
+// MzansiBuilds — main.js
+
+// Auto-dismiss flash messages after 4 seconds
+document.addEventListener('DOMContentLoaded', () => {
+  const flashes = document.querySelectorAll('.flash');
+  flashes.forEach(el => {
+    setTimeout(() => {
+      el.style.transition = 'opacity .4s';
+      el.style.opacity = '0';
+      setTimeout(() => el.remove(), 400);
+    }, 4000);
+  });
+
+  // Tag-option checkbox toggle (visual only — the hidden input handles the value)
+  document.querySelectorAll('.tag-option-label').forEach(label => {
+    const checkbox = label.querySelector('input[type="checkbox"]');
+    const span = label.querySelector('.tag-option');
+    if (checkbox && span) {
+      checkbox.addEventListener('change', () => {
+        span.classList.toggle('selected', checkbox.checked);
+      });
+    }
+  });
+});

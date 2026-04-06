@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}My Projects — MzansiBuilds{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">My Projects</h1>
+    <p class="page-sub">{{ projects | length }} total · {{ projects | selectattr('is_completed') | list | length }} shipped</p>
+  </div>
+  <a href="{{ url_for('projects.new_project') }}" class="btn btn-primary">+ New Project</a>
+</div>
+
+{% if not projects %}
+  <div class="empty">
+    <div class="empty-icon">🚀</div>
+    <p class="empty-text">You haven't added any projects yet.</p>
+    <a href="{{ url_for('projects.new_project') }}" class="btn btn-primary" style="margin-top:14px;">Start your first project</a>
+  </div>
+{% else %}
+  <div class="feed-section">
+    {% for project in projects %}
+      <div class="project-card {% if project.is_completed %}done{% endif %}">
+        <div class="project-meta">
+          <span class="tag-stage stage-{{ project.stage | replace(' ', '') }}">{{ project.stage }}</span>
+          {% if project.is_completed %}
+            <span class="tag tag-green">✅ Shipped</span>
+          {% endif %}
+          <span class="time-ago">{{ project.created_at.strftime('%d %b %Y') }}</span>
+        </div>
+        <a href="{{ url_for('projects.view_project', project_id=project.id) }}" class="project-title-link">
+          <h2 class="project-title">{{ project.title }}</h2>
+        </a>
+        <p class="project-desc">{{ project.description }}</p>
+
+        {% if project.tags_list %}
+          <div class="project-tags">
+            {% for tag in project.tags_list[:4] %}
+              <span class="tag">{{ tag }}</span>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <div class="project-footer">
+          <div class="action-row">
+            <a href="{{ url_for('projects.view_project', project_id=project.id) }}" class="icon-btn">🏁 {{ project.milestones | length }} milestones</a>
+            <a href="{{ url_for('projects.view_project', project_id=project.id) }}#comments" class="icon-btn">💬 {{ project.comments | length }}</a>
+            <a href="{{ url_for('projects.edit_project', project_id=project.id) }}" class="icon-btn">✏️ Edit</a>
+          </div>
+          <div class="progress-bar" style="width:120px;">
+            <div class="progress-fill" style="width:{{ project.progress_percent }}%;"></div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+{% endblock %}

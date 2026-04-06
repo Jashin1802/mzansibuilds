@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}New Project — MzansiBuilds{% endblock %}
+
+{% block content %}
+<div class="form-page">
+  <div class="form-page-header">
+    <h1 class="form-page-title">New Project Entry</h1>
+    <p class="form-page-sub">Share what you're building with the community</p>
+  </div>
+
+  {% if error %}
+    <div class="auth-error" style="margin-bottom:16px;">{{ error }}</div>
+  {% endif %}
+
+  <form method="POST" class="project-form">
+    <div class="form-group">
+      <label class="label" for="title">Project Title *</label>
+      <input class="input" type="text" id="title" name="title" placeholder="What are you building?" required autofocus />
+    </div>
+
+    <div class="form-group">
+      <label class="label" for="description">Description *</label>
+      <textarea class="input textarea" id="description" name="description" placeholder="Tell the community what this project is about, the problem it solves, and who it's for..." required></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="label" for="stage">Current Stage</label>
+      <select class="input select" id="stage" name="stage">
+        {% for s in stages %}
+          <option value="{{ s }}">{{ s }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="label">Support Needed <span class="text-muted">(select all that apply)</span></label>
+      <div class="tag-grid">
+        {% for s in support_types %}
+          <label class="tag-option-label">
+            <input type="checkbox" name="support" value="{{ s }}" hidden />
+            <span class="tag-option">{{ s }}</span>
+          </label>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="label">Tech Stack <span class="text-muted">(select all that apply)</span></label>
+      <div class="tag-grid">
+        {% for t in tech_tags %}
+          <label class="tag-option-label">
+            <input type="checkbox" name="tags" value="{{ t }}" hidden />
+            <span class="tag-option">{{ t }}</span>
+          </label>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <a href="{{ url_for('feed.feed') }}" class="btn btn-ghost">Cancel</a>
+      <button type="submit" class="btn btn-primary">Save Project →</button>
+    </div>
+  </form>
+</div>
+{% endblock %}
