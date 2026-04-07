@@ -1,4 +1,4 @@
-# MzansiBuilds 🌍
+# MzansiBuilds
 
 > **Build in public. Grow together.**
 > A developer community platform for South African builders — share your projects, track milestones, collaborate, and celebrate shipping.
@@ -11,15 +11,15 @@ Built for the **Derivco Code Skills Challenge**.
 
 | Feature | Description |
 |---|---|
-| Account Management | Register, login, logout with secure password hashing |
-| Project Entries | Create projects with stage, support needed, and tech stack |
-| Live Feed | See what other developers are building in real-time |
-| Collaboration | Raise/lower your hand to request collaboration on any project |
-| Comments | Comment on any project in the feed |
-| Milestones | Log progress milestones for your own projects |
-| Stage Updates | Move your project through Ideation → Planning → In Progress → Testing → Deployed |
-| Celebration Wall | Completed projects are showcased on the public wall |
-| Developer Profiles | Public profiles with stats and project history |
+| 🔐 Account Management | Register, login, logout with secure password hashing |
+| 🚀 Project Entries | Create projects with stage, support needed, and tech stack |
+| 📡 Live Feed | See what other developers are building in real-time |
+| 🙋 Collaboration | Raise/lower your hand to request collaboration on any project |
+| 💬 Comments | Comment on any project in the feed |
+| 🏁 Milestones | Log progress milestones for your own projects |
+| 📍 Stage Updates | Move your project through Ideation → Planning → In Progress → Testing → Deployed |
+| 🎉 Celebration Wall | Completed projects are showcased on the public wall |
+| 👤 Developer Profiles | Public profiles with stats and project history |
 
 ---
 

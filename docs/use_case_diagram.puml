@@ -1,0 +1,75 @@
+@startuml MzansiBuilds_UseCaseDiagram
+
+title MzansiBuilds — Use Case Diagram
+
+left to right direction
+
+actor "Developer (Unauthenticated)" as Guest
+actor "Developer (Authenticated)" as Dev
+actor "Project Owner" as Owner
+
+rectangle "MzansiBuilds Platform" {
+
+  ' Auth
+  usecase "Register Account" as UC1
+  usecase "Login" as UC2
+  usecase "Logout" as UC3
+
+  ' Feed
+  usecase "View Live Feed" as UC4
+  usecase "View Project Detail" as UC5
+
+  ' Collaboration
+  usecase "Raise Hand to Collaborate" as UC6
+  usecase "Post a Comment" as UC7
+
+  ' Own projects
+  usecase "Create New Project" as UC8
+  usecase "Edit Project" as UC9
+  usecase "Update Project Stage" as UC10
+  usecase "Log Milestone" as UC11
+  usecase "Mark Project Complete" as UC12
+  usecase "Delete Project" as UC13
+
+  ' Discovery
+  usecase "View Celebration Wall" as UC14
+  usecase "View Developer Profile" as UC15
+  usecase "Edit Own Profile" as UC16
+}
+
+' Guest actions
+Guest --> UC1
+Guest --> UC2
+
+' Authenticated developer actions
+Dev --> UC3
+Dev --> UC4
+Dev --> UC5
+Dev --> UC6
+Dev --> UC7
+Dev --> UC8
+Dev --> UC14
+Dev --> UC15
+Dev --> UC16
+
+' Owner-only actions (extends Dev)
+Owner --> UC9
+Owner --> UC10
+Owner --> UC11
+Owner --> UC12
+Owner --> UC13
+
+' Owner is a type of Dev
+Owner --|> Dev
+
+note bottom of UC12
+  Only available once
+  project stage = Deployed
+end note
+
+note right of UC6
+  Cannot raise hand
+  on own project
+end note
+
+@enduml
