@@ -48,7 +48,7 @@ class TestUserCreation:
         )
         db.session.add(user)
         db.session.commit()
-        assert user.bio == "Developer building in public 🚀"
+        assert user.bio == "Developer building in public"
 
     def test_joined_at_is_set_automatically(self, db, sample_user):
         """The joined_at timestamp is set on creation."""

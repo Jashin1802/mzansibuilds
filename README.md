@@ -17,9 +17,10 @@ Built for the **Derivco Code Skills Challenge**.
 | Collaboration | Raise or lower your hand to request collaboration on any project |
 | Comments | Comment on any project in the feed |
 | Milestones | Log progress milestones for your own projects |
-| Stage Updates | Move your project through Ideation → Planning → In Progress → Testing → Deployed |
+| Stage Updates | Move your project through Ideation, Planning, In Progress, Testing, Deployed |
 | Celebration Wall | Completed projects are showcased on the public wall |
 | Developer Profiles | Public profiles with stats and project history |
+
 ---
 
 ## Tech Stack
@@ -32,8 +33,9 @@ Built for the **Derivco Code Skills Challenge**.
 | Auth | Flask-Login + Werkzeug password hashing |
 | Database | SQLite (development) |
 | Templates | Jinja2 (server-side rendering) |
+| Testing | pytest + pytest-flask |
+| CI/CD | GitHub Actions |
 | Styling | Vanilla CSS (custom design system — green/black/white) |
-| Fonts | Space Grotesk + JetBrains Mono (Google Fonts) |
 
 ---
 
@@ -41,27 +43,28 @@ Built for the **Derivco Code Skills Challenge**.
 
 ```
 mzansibuilds/
-├── run.py                  # Entry point
-├── __init__.py             # App factory + seed data
-├── requirements.txt
-├── .env                    # Environment variables (not committed)
-├── .gitignore
+├── run.py                        # Entry point
+├── __init__.py                   # App factory + seed data
+├── requirements.txt              # Production dependencies
+├── requirements-dev.txt          # Development and test dependencies
+├── pytest.ini                    # Test configuration
+├── SECURITY.md                   # Security policy and measures
 │
 ├── models/
-│   ├── user.py             # User model + Flask-Login integration
-│   ├── project.py          # Project model + collab many-to-many
-│   ├── milestone.py        # Milestone model
-│   └── comment.py          # Comment model
+│   ├── user.py                   # User model + Flask-Login integration
+│   ├── project.py                # Project model + collaboration many-to-many
+│   ├── milestone.py              # Milestone model
+│   └── comment.py                # Comment model
 │
 ├── routes/
-│   ├── auth.py             # Login, register, logout
-│   ├── feed.py             # Live feed
-│   ├── projects.py         # CRUD + milestones + comments + collab
-│   ├── wall.py             # Celebration wall
-│   └── profile.py          # Developer profiles
+│   ├── auth.py                   # Login, register, logout
+│   ├── feed.py                   # Live feed
+│   ├── projects.py               # CRUD, milestones, comments, collaboration
+│   ├── wall.py                   # Celebration wall
+│   └── profile.py                # Developer profiles
 │
 ├── templates/
-│   ├── base.html           # Base layout with nav
+│   ├── base.html                 # Base layout with navigation
 │   ├── feed.html
 │   ├── wall.html
 │   ├── profile.html
@@ -75,26 +78,42 @@ mzansibuilds/
 │       ├── detail.html
 │       └── my_projects.html
 │
-└── static/
-    ├── css/main.css        # Full design system
-    └── js/main.js          # UI interactivity
+├── static/
+│   ├── css/main.css              # Full design system
+│   └── js/main.js               # UI interactivity
+│
+├── tests/
+│   ├── conftest.py               # Shared pytest fixtures
+│   ├── test_models_user.py       # User model unit tests
+│   ├── test_models_project.py    # Project model unit tests
+│   ├── test_routes_auth.py       # Auth route integration tests
+│   └── test_routes_projects.py   # Project route integration tests
+│
+├── docs/
+│   ├── ARCHITECTURE.md           # System architecture and design decisions
+│   ├── use_case_diagram.puml     # UML Use Case diagram source
+│   └── use_case_diagram.png      # Rendered UML diagram
+│
+└── .github/
+    └── workflows/
+        └── ci.yml                # GitHub Actions CI pipeline
 ```
 
 ---
 
-## Getting Started (VS Code)
+## Getting Started
 
 ### 1. Clone the repo
 ```bash
-git clone https://github.com/YOUR_USERNAME/mzansibuilds.git
+git clone https://github.com/Jashin1802/mzansibuilds.git
 cd mzansibuilds
 ```
 
 ### 2. Create and activate a virtual environment
 ```bash
-# Windows
+# Windows (Command Prompt)
 python -m venv venv
-venv\Scripts\activate
+venv\Scripts\activate.bat
 
 # macOS / Linux
 python3 -m venv venv
@@ -104,14 +123,12 @@ source venv/bin/activate
 ### 3. Install dependencies
 ```bash
 pip install -r requirements.txt
+pip install -r requirements-dev.txt
 ```
 
-### 4. Set up environment variables
-Copy `.env.example` to `.env` (or edit `.env` directly):
+### 4. Create the instance folder
 ```bash
-SECRET_KEY=your-secret-key-here
-FLASK_ENV=development
-FLASK_DEBUG=1
+mkdir instance
 ```
 
 ### 5. Run the app
@@ -123,48 +140,59 @@ Open your browser at **http://localhost:5000**
 
 ---
 
+## Running Tests
+
+```bash
+pytest -v
+```
+
+Tests use an isolated in-memory SQLite database and never affect the development database.
+
+---
+
 ## Demo Accounts
 
 The app seeds demo data on first run:
 
-| Username | Password | Character |
-|---|---|---|
-| `sipho_dev` | `password` | Full-stack, fintech |
-| `amahle_codes` | `password` | ML / NLP engineer |
-| `kagiso_builds` | `password` | Mobile dev |
+| Username | Password |
+|---|---|
+| `sipho_dev` | `password` |
+| `amahle_codes` | `password` |
+| `kagiso_builds` | `password` |
 
 ---
 
-## Development Notes
+## CI/CD
 
-- The SQLite database is created automatically at `instance/mzansibuilds.db` on first run
-- Seed data is only inserted if the database is empty
-- To reset the database: delete `instance/mzansibuilds.db` and restart the server
+Every push to `main` triggers the GitHub Actions pipeline which:
+- Sets up Python 3.11
+- Installs all dependencies
+- Creates the instance directory
+- Runs the full test suite with pytest
 
----
-
-## GitHub Setup
-
-```bash
-git init
-git add .
-git commit -m "Initial commit — MzansiBuilds platform"
-git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/mzansibuilds.git
-git push -u origin main
-```
+See `.github/workflows/ci.yml` for configuration.
 
 ---
 
-## Assessment Competencies Addressed
+## Security
 
-- **Code Quality** — Blueprint-based Flask architecture, separation of concerns (models/routes/templates)
-- **Best Practices** — App factory pattern, environment variables, `.gitignore`, password hashing
-- **Code Version Control** — Git-ready structure with meaningful commit history
-- **User Centricity** — Full user journey: register → create project → collaborate → ship → celebrate
-- **Efficiency** — Single SQLite DB, minimal dependencies, server-side rendering
-- **Resourcefulness** — AI-assisted development with own architectural decisions and custom design system
+See `SECURITY.md` for the full security policy. Key measures include:
+
+- Passwords hashed using PBKDF2-SHA256 — never stored in plaintext
+- All authenticated routes protected with `@login_required`
+- Ownership verified before any project mutation (HTTP 403 on violation)
+- SQLAlchemy ORM used throughout — no raw SQL
+- Secret key loaded from `.env` which is excluded from version control
 
 ---
 
-*Built with 🌍 for the Derivco Code Skills Challenge*
+## Documentation
+
+- Architecture and design decisions: `docs/ARCHITECTURE.md`
+- UML Use Case diagram: `docs/use_case_diagram.png`
+- Security policy: `SECURITY.md`
+- AI usage statement: `docs/ARCHITECTURE.md` section 7
+
+---
+
+*Built for the Derivco Code Skills Challenge*
