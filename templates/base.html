@@ -26,6 +26,7 @@
   <div class="nav-user">
     <a href="{{ url_for('projects.new_project') }}" class="btn btn-primary btn-sm">+ New Project</a>
     <a href="{{ url_for('profile.profile') }}" class="avatar" title="{{ current_user.name }}">{{ current_user.avatar_initials }}</a>
+    <a href="{{ url_for('auth.logout') }}" class="nav-btn" style="color:#f87171;">Sign Out</a>
   </div>
 </nav>
 {% endif %}
